@@ -385,3 +385,181 @@ Métodos:
 Métodos:
 
 · main(String[] args)
+
+---
+# b) 
+
+```mermaid
+classDiagram
+    direction TB
+
+    %% Superclase Abstracta Persona
+    class Persona {
+        <<abstract>>
+        # String ID
+        # String nombre
+        # String apellido
+        # int edad
+        # String telefono
+        # String correo
+        + Persona(...)
+        + String getNombre()
+        + void setNombre(String nombre)
+        + String toString()
+    }
+
+    %% Subclase Alumno
+    class Alumno {
+        - Date fechaRegistro
+        - List~Pago~ listaPagos
+        - List~RegistroClase~ listaClases
+        + void agregarPago(Pago pago)
+        + void agregarClase(RegistroClase rc)
+        + List~RegistroClase~ getHistorialClases()
+        + double getTotalPagado()
+        + boolean tieneMensualidadVigente()
+        + int clasesDisponibles()
+        + String toString()
+    }
+
+    %% Subclase Profesor
+    class Profesor {
+        - List~String~ disciplinas
+        - Date fechaDeContratacion
+        + Profesor(...)
+        + void agregarDisciplina(String disciplina)
+        + List~String~ getDisciplinas()
+        + boolean imparteClase(String disciplina)
+        + String toString()
+    }
+
+    %% Superclase Abstracta Pago
+    class Pago {
+        <<abstract>>
+        # String idPago
+        # double monto
+        # Date fechaPago
+        # Alumno alumno
+        + abstract double calcularMonto()
+        + abstract String descripcion()
+        + double getMonto()
+        + void setMonto(double monto)
+        + String toString()
+    }
+
+    %% Subclase PagoMensualidad
+    class PagoMensualidad {
+        - String mes
+        - int anio
+        + double calcularMonto()
+        + String descripcion()
+    }
+
+    %% Subclase PagoPaquete
+    class PagoPaquete {
+        - int numeroClases
+        - double costoPorClase
+        + PagoPaquete(...)
+        + double calcularMonto()
+        + String descripcion()
+    }
+
+    %% Superclase Abstracta Clase
+    class Clase {
+        <<abstract>>
+        # String IDclase
+        # String nombre
+        # Profesor profesor
+        # int duracionMinutos
+        # double costo
+        + abstract String descripcion()
+        + abstract String nivelIntensidad()
+        + String getIDclase()
+        + void setIDclase(String id)
+    }
+
+    %% Subclases de Disciplinas
+    class ClasePilates {
+        - boolean seleccionBanda
+        - boolean seleccionLiga
+        - boolean seleccionCama
+        - boolean seleccionTapete
+        + ClasePilates(...)
+        + String descripcion()
+        + String nivelIntensidad()
+        + String toString()
+    }
+
+    class ClaseYoga {
+        - boolean seleccionTapete
+        - boolean seleccionBanda
+        - boolean seleccionLiga
+        + ClaseYoga(...)
+        + String descripcion()
+        + String nivelIntensidad()
+        + String toString()
+    }
+
+    class ClaseFuncional {
+        - boolean seleccionTRX
+        - boolean seleccionPesasRusas
+        - boolean seleccionBanda
+        - boolean seleccionLiga
+        + ClaseFuncional(...)
+        + String descripcion()
+        + String nivelIntensidad()
+        + String toString()
+    }
+
+    %% Clase RegistroClase (Asistencia)
+    class RegistroClase {
+        - String IDregistro
+        - Alumno alumno
+        - Clase clase
+        - Profesor profesor
+        - Date fecha
+        - boolean asistencia
+        + RegistroClase(...)
+        + String getIDregistro()
+        + boolean isAsistencia()
+        + String toString()
+    }
+
+    %% Clase Principal Gestora EstudioEjercicio
+    class EstudioEjercicio {
+        - List~Alumno~ listaAlumnos
+        - List~Profesor~ listaProfesores
+        - List~Clase~ listaClases
+        - List~Pago~ listaPagos
+        + void registrarAlumno()
+        + Alumno buscarAlumno(String id)
+        + void registrarPago()
+        + void registrarClase()
+        + void consultarAlumno()
+        + void guardarDatos()
+        + void cargarDatos()
+    }
+
+    %% Relaciones de Herencia
+    Persona <|-- Alumno : hereda
+    Persona <|-- Profesor : hereda
+
+    Pago <|-- PagoMensualidad : hereda
+    Pago <|-- PagoPaquete : hereda
+
+    Clase <|-- ClasePilates : hereda
+    Clase <|-- ClaseYoga : hereda
+    Clase <|-- ClaseFuncional : hereda
+
+    %% Relaciones de Asociación / Composición estructural
+    EstudioEjercicio "1" o-- "*" Alumno : gestiona
+    EstudioEjercicio "1" o-- "*" Profesor : gestiona
+    EstudioEjercicio "1" o-- "*" Clase : administra
+    EstudioEjercicio "1" o-- "*" Pago : registra
+    
+    Alumno "1" --> "*" Pago : realiza
+    Alumno "1" --> "*" RegistroClase : asiste
+    Profesor "1" --> "*" Clase : imparte
+    Clase "1" --> "*" RegistroClase : genera
+    RegistroClase "*" --> "1" Alumno : involucra
+    RegistroClase "*" --> "1" Clase : pertenece
