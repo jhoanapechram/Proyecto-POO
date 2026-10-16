@@ -159,3 +159,229 @@ Del análisis se identifican de forma preliminar los conceptos principales del p
 - **Tipo de pago:** concepto general con dos variantes, mensualidad y paquete de clases, que comparten datos (monto, fecha de pago) pero se comportan distinto al validar vigencia. Esto sugiere el uso de **herencia y polimorfismo**.
 - **Tipo de clase:** concepto general con variantes (Yoga, Pilates, Funcional, etc.), que también permite aplicar herencia y polimorfismo.
 - **Registro de clase (asistencia):** relaciona a un alumno con una clase tomada en una fecha determinada.
+
+# 3. Aproximación a una solución software.
+---
+# a) 
+
+1. **Clase abstracta Persona**
+
+Atributos:
+
+· ID
+· nombre
+· apellido
+· edad
+· telefono
+· correo
+
+Métodos:
+
+· Constructores
+· Getters y setters
+· toString()
+
+---
+
+2. **Clase Alumno** (hereda de Persona)
+
+Atributos:
+
+· fechaRegistro
+· listaPagos
+· listaClases
+
+Métodos:
+
+· agregarPago()
+· agregarClase()
+· getHistorialClases()
+· getTotalPagado()
+· tieneMensualidadVigente()
+· clasesDisponibles()
+· toString()
+· Getters y setters
+
+---
+
+3. **Clase Profesor** (hereda de Persona)
+
+Atributos:
+
+· disciplinas
+· fechaDeContratacion
+
+Métodos:
+
+· Constructor
+· agregarDisciplina()
+· getDisciplinas()
+· imparteClase()
+· Getters y setters
+· toString()
+
+---
+
+4. **Clase abstracta Pago**
+
+Atributos:
+
+· idPago
+· monto
+· fechaPago
+· alumno
+
+Métodos:
+
+· Abstractos: calcularMonto(), descripcion()
+
+. Concretos: getters y setters, toString()
+
+---
+
+5. **Clase PagoMensualidad** (hereda de Pago)
+
+Atributos:
+
+· mes
+· anio
+
+Métodos:
+
+· calcularMonto()
+· descripcion()
+
+---
+
+6. **Clase PagoPaquete** (hereda de Pago)
+
+Atributos:
+
+· numeroClases
+· costoPorClase
+
+Métodos:
+
+· Constructor
+· calcularMonto() (numeroClases * costoPorClase)
+· descripcion()
+
+---
+
+7. **Clase abstracta Clase**
+
+Atributos:
+
+· IDclase
+· nombre
+· profesor
+· duracionMinutos
+· costo
+
+Métodos:
+
+· Abstractos: descripcion(), nivelIntensidad()
+· Concretos: getters y setters
+
+---
+
+8. **Clase ClasePilates** (hereda de Clase)
+
+Atributos:
+
+· seleccionBanda (boolean)
+· seleccionLiga (boolean)
+· seleccionCama (boolean)
+· seleccionTapete (boolean)
+
+Métodos:
+
+· Constructor
+· descripcion()
+· nivelIntensidad()
+· Getters y setters
+· toString()
+
+---
+
+9. **Clase ClaseYoga** (hereda de Clase)
+
+Atributos:
+
+· seleccionTapete (boolean)
+· seleccionBanda (boolean)
+· seleccionLiga (boolean)
+
+Métodos:
+
+· Constructor
+· descripcion()
+· nivelIntensidad()
+· Getters y setters
+· toString()
+
+---
+
+10. **Clase ClaseFuncional** (hereda de Clase)
+
+Atributos:
+
+· seleccionTRX (boolean)
+· seleccionPesasRusas (boolean)
+· seleccionBanda (boolean)
+· seleccionLiga (boolean)
+
+Métodos:
+
+· Constructor
+· descripcion()
+· nivelIntensidad()
+· Getters y setters
+· toString()
+
+---
+
+11. **Clase RegistroClase**
+
+Atributos:
+
+· IDregistro
+· alumno
+· clase
+· profesor
+· fecha
+· asistencia
+
+Métodos:
+
+· Constructor
+· Getters y setters
+· toString()
+
+---
+
+12. **Clase EstudioEjercicio**
+
+Atributos:
+
+· listaAlumnos
+· listaClases
+· listaPagos
+
+Métodos:
+
+· registrarAlumno()
+· buscarAlumno()
+· registrarPago()
+· registrarClase()
+· consultarAlumno()
+· guardarDatos()
+· cargarDatos()
+
+---
+
+13. **Mainclass ProbarStudio**
+
+Métodos:
+
+· main(String[] args)
