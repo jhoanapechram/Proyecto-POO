@@ -621,8 +621,6 @@ El polimorfismo se aplicará principalmente mediante la sobreescritura de métod
 
 Las interfaces se incorporarán para definir contratos de comportamiento estrictos que ciertas clases deben cumplir, garantizando desacoplamiento y estandarización en áreas críticas como el almacenamiento persistente de datos y la validación de reglas de negocio.
 
-*(Nota para tu equipo: Si en el diseño base mencionaron la persistencia de datos y la validación de reglas, podemos proponer formalmente la creación de las siguientes interfaces dentro del proyecto para elevar la complejidad técnica de la POO)*:
-
 ### 1. Interfaz Persistible
 * **Propósito:** Definir el contrato para aquellas clases o gestores que necesiten almacenar y recuperar información desde archivos de texto o binarios para cumplir con el Requisito No Funcional RNF-02 (Confiabilidad / Almacenamiento persistente).
 * **Métodos definidos en el contrato:**
