@@ -564,7 +564,9 @@ classDiagram
     RegistroClase "*" --> "1" Alumno : involucra
     RegistroClase "*" --> "1" Clase : pertenece
 
----
+```
+
+# 4. Descripción de herencia, polimorfismo e interfaces.
 
 En el desarrollo del Sistema de Gestión para el Estudio de Yoga y Pilates, el diseño orientado a objetos se sustenta en tres pilares fundamentales de la POO: **Herencia**, **Polimorfismo** e **Interfaces**. Estos conceptos no solo permiten una estructura de código limpia y organizada, sino que garantizan la mantenibilidad y escalabilidad del software conforme a los requisitos no funcionales (RNF-04).
 
@@ -632,5 +634,4 @@ Las interfaces se incorporarán para definir contratos de comportamiento estrict
 * **Métodos definidos en el contrato:**
   * `boolean validarVigencia();`
 * **Implementación:** Las clases asociadas al control de asistencias y los tipos de pago implementarán esta interfaz para verificar de manera uniforme si un paquete de clases se ha agotado o si una mensualidad ha expirado antes de autorizar el acceso a la clase en recepción.
-
 
