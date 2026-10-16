@@ -563,3 +563,74 @@ classDiagram
     Clase "1" --> "*" RegistroClase : genera
     RegistroClase "*" --> "1" Alumno : involucra
     RegistroClase "*" --> "1" Clase : pertenece
+
+---
+
+En el desarrollo del Sistema de Gestión para el Estudio de Yoga y Pilates, el diseño orientado a objetos se sustenta en tres pilares fundamentales de la POO: **Herencia**, **Polimorfismo** e **Interfaces**. Estos conceptos no solo permiten una estructura de código limpia y organizada, sino que garantizan la mantenibilidad y escalabilidad del software conforme a los requisitos no funcionales (RNF-04).
+
+A continuación se detalla dónde y cómo se implementarán cada uno de estos temas basándonos en la arquitectura de clases definida en la solución.
+
+## 4.1 Herencia
+
+La herencia se utilizará para evitar la duplicación de código (principio DRY - *Don't Repeat Yourself*), permitiendo que las clases hijas reutilicen los atributos y métodos comunes definidos en una clase superior (superclase), añadiendo o especializando su propio comportamiento.
+
+### 1. Jerarquía de Personas (`Persona` $\rightarrow$ `Alumno`, `Profesor`)
+* **Superclase:** `Persona` (Clase abstracta)
+  * *Atributos heredables:* `id`, `nombre`, `apellido`, `edad`, `telefono`, `correo`.
+* **Subclases:** `Alumno` y `Profesor`
+  * *Especialización en Alumno:* Añade atributos y métodos propios de su rol, como `fechaRegistro`, `listaPagos`, `listaClases`, además de métodos como `agregarPago()` y `tieneMensualidadVigente()`.
+  * *Especialización en Profesor:* Añade atributos específicos de su labor docente, tales como `disciplinas` (lista de disciplinas que imparte) y `fechaDeContratacion`, junto con métodos como `imparteClase()`.
+
+### 2. Jerarquía de Pagos (`Pago` $\rightarrow$ `PagoMensualidad`, `PagoPaquete`)
+* **Superclase:** `Pago` (Clase abstracta)
+  * *Atributos heredables:* `idPago`, `monto`, `fechaPago`, `alumno`.
+* **Subclases:** `PagoMensualidad` y `PagoPaquete`
+  * *Especialización en PagoMensualidad:* Incorpora los atributos `mes` y `anio` para controlar el periodo cubierto.
+  * *Especialización en PagoPaquete:* Incorpora los atributos `numeroClases` y `costoPorClase` para gestionar el saldo de asistencias disponibles.
+
+### 3. Jerarquía de Clases / Disciplinas (`Clase` $\rightarrow$ `ClasePilates`, `ClaseYoga`, `ClaseFuncional`)
+* **Superclase:** `Clase` (Clase abstracta)
+  * *Atributos heredables:* `IDclase`, `nombre`, `profesor`, `duracionMinutos`, `costo`.
+* **Subclases:** `ClasePilates`, `ClaseYoga`, `ClaseFuncional`
+  * *Especialización:* Cada una incluye atributos propios de los aditamentos o equipos específicos que se utilizan en la disciplina (por ejemplo, `seleccionCama`, `seleccionTapete` en Pilates; `seleccionBanda`, `seleccionLiga` en Yoga; o `seleccionTRX`, `seleccionPesasRusas` en Funcional).
+
+---
+
+## 4.2 Polimorfismo
+
+El polimorfismo se aplicará principalmente mediante la sobreescritura de métodos (*Method Overriding*) a partir de las clases abstractas. Esto permite que el sistema trate a diferentes objetos de manera uniforme a través de sus referencias generales, ejecutando el comportamiento específico correspondiente a cada tipo de objeto en tiempo de ejecución.
+
+### 1. Polimorfismo en el Cálculo de Pagos (`Pago`)
+* **Implementación:** La clase abstracta `Pago` declara el método abstracto `calcularMonto()` y `descripcion()`.
+* **Comportamiento:**
+  * En `PagoMensualidad`, el método `calcularMonto()` asigna y retorna la tarifa fija establecida por la mensualidad del estudio.
+  * En `PagoPaquete`, el método `calcularMonto()` multiplica de forma dinámica `numeroClases * costoPorClase`.
+* **Ventaja en el sistema:** Al momento de generar un reporte financiero o consultar los pagos de un alumno, el sistema puede invocar `pago.calcularMonto()` u obtener la descripción sin necesidad de evaluar explícitamente si se trata de un paquete o una mensualidad, facilitando la extensibilidad si en el futuro se desea agregar un nuevo tipo de pago (por ejemplo, "Clase suelta").
+
+### 2. Polimorfismo en las Disciplinas del Estudio (`Clase`)
+* **Implementación:** La clase abstracta `Clase` define los métodos abstractos `descripcion()` y `nivelIntensidad()`.
+* **Comportamiento:** Cada subclase (`ClaseYoga`, `ClasePilates`, `ClaseFuncional`) sobrescribe estos métodos para retornar los detalles particulares de la disciplina y su nivel de exigencia física.
+* **Ventaja en el sistema:** Satisface directamente el **Requisito Funcional RF-13** (*"El sistema debe permitir agregar nuevos tipos de clase sin modificar el resto del programa"*), ya que el módulo de registro de clases interactúa genéricamente con la clase abstracta `Clase`.
+
+---
+
+## 4.3 Interfaces
+
+Las interfaces se incorporarán para definir contratos de comportamiento estrictos que ciertas clases deben cumplir, garantizando desacoplamiento y estandarización en áreas críticas como el almacenamiento persistente de datos y la validación de reglas de negocio.
+
+*(Nota para tu equipo: Si en el diseño base mencionaron la persistencia de datos y la validación de reglas, podemos proponer formalmente la creación de las siguientes interfaces dentro del proyecto para elevar la complejidad técnica de la POO)*:
+
+### 1. Interfaz `Persistible`
+* **Propósito:** Definir el contrato para aquellas clases o gestores que necesiten almacenar y recuperar información desde archivos de texto o binarios para cumplir con el **Requisito No Funcional RNF-02** (Confiabilidad / Almacenamiento persistente).
+* **Métodos definidos en el contrato:**
+  * `void guardarDatos(String rutaArchivo);`
+  * `void cargarDatos(String rutaArchivo);`
+* **Implementación:** La clase principal `EstudioEjercicio` implementará esta interfaz, asegurando que los registros de alumnos, profesores y pagos no se pierdan al cerrar el sistema.
+
+### 2. Interfaz `Validable`
+* **Propósito:** Estandarizar los mecanismos de validación de vigencias y estados antes de permitir registrar una asistencia o aplicar un pago (**Requisito Funcional RF-10 y RF-16**).
+* **Métodos definidos en el contrato:**
+  * `boolean validarVigencia();`
+* **Implementación:** Las clases asociadas al control de asistencias y los tipos de pago implementarán esta interfaz para verificar de manera uniforme si un paquete de clases se ha agotado o si una mensualidad ha expirado antes de autorizar el acceso a la clase en recepción.
+
+
