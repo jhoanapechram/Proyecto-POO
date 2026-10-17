@@ -387,8 +387,15 @@ Métodos:
 · main(String[] args)
 
 ---
-# b) 
+# b) Diagramas UML
 
+### Diagrama de jerarquía de clases
+<img src="imagenes/JerarquiaClases.png" width="964" alt="JerarquiaClases">
+
+---
+
+### Diagrama de clases detallado
+<img src="imagenes/Class Diagram0.png" width="1000" alt="Class Diagram0">
 ```mermaid
 classDiagram
     direction TB
